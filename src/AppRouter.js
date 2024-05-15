@@ -5,7 +5,7 @@ import Pending from './Pending';
 
 const AppRouter = () => {
   return (
-    <Router basename="/admin">
+    <Router>
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/pending" element={<Pending />} />
