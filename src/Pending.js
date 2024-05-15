@@ -121,11 +121,11 @@ const Pending = () => {
     <div>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="http://localhost:3000/">Referral System Anteh</Navbar.Brand>
+          <Navbar.Brand href="https://amstronglandeza21.github.io/Admin/">Referral System Anteh</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="http://localhost:3000/Pending">Pending</Nav.Link>
+              <Nav.Link href="https://amstronglandeza21.github.io/Admin/Pending">Pending</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
