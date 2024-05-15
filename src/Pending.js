@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Navbar, Container, Nav, Modal, Button, Spinner } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import  Modal  from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
 
 const Pending = () => {
   const [pendingData, setPendingData] = useState([]);
@@ -119,20 +124,18 @@ const Pending = () => {
 
   return (
     <div>
-    
       <Navbar bg="dark" variant="dark">
-  <Container>
-    <Navbar.Brand href={process.env.PUBLIC_URL + '/'}>Referral System Anteh</Navbar.Brand>
-    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <Navbar.Collapse id="basic-navbar-nav">
-      <Nav className="me-auto">
-        <Nav.Link href={process.env.PUBLIC_URL + '/'}>Home</Nav.Link>
-        <Nav.Link href={process.env.PUBLIC_URL + '/pending'}>Pending</Nav.Link>
-      </Nav>
-    </Navbar.Collapse>
-  </Container>
-</Navbar>
+        <Container>
+        <Navbar.Brand href="/">Referral System Anteh</Navbar.Brand>
+<Navbar.Toggle aria-controls="basic-navbar-nav" />
+<Navbar.Collapse id="basic-navbar-nav">
+  <Nav className="me-auto">
+    <Nav.Link href="/pending">Pending</Nav.Link>
+  </Nav>
+</Navbar.Collapse>
 
+        </Container>
+      </Navbar>
       <div className="container-fluid mt-4">
         <h2 className="mb-4">Pending Data</h2>
         {loading ? (
