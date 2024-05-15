@@ -47,7 +47,7 @@ const App = () => {
       .then((data) => {
         if (data.message.includes('successfully')) {
           fetchData();
-          alert('Referrer deleted successfully.'); // You can replace this with your modal
+          alert('Referrer deleted successfully.'); 
         } else {
           alert('Referrer not found.');
         }
