@@ -126,11 +126,11 @@ const Pending = () => {
     <div>
       <Navbar bg="dark" variant="dark">
         <Container>
-        <Navbar.Brand href="/">Referral System Anteh</Navbar.Brand>
+        <Navbar.Brand href="#/">Referral System Anteh</Navbar.Brand>
 <Navbar.Toggle aria-controls="basic-navbar-nav" />
 <Navbar.Collapse id="basic-navbar-nav">
   <Nav className="me-auto">
-    <Nav.Link href="/pending">Pending</Nav.Link>
+    <Nav.Link href="#/pending">Pending</Nav.Link>
   </Nav>
 </Navbar.Collapse>
 
