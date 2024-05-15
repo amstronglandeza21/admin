@@ -126,7 +126,7 @@ const Pending = () => {
     <div>
       <Navbar bg="dark" variant="dark">
         <Container>
-        <Navbar.Brand href="admin/">Referral System Anteh</Navbar.Brand>
+        <Navbar.Brand href="/">Referral System Anteh</Navbar.Brand>
 <Navbar.Toggle aria-controls="basic-navbar-nav" />
 <Navbar.Collapse id="basic-navbar-nav">
   <Nav className="me-auto">
