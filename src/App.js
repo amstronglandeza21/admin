@@ -94,13 +94,18 @@ const App = () => {
   return (
     <div>
       <Navbar bg="dark" variant="dark">
-        <Container>
-          <Navbar.Brand href="https://amstronglandeza21.github.io/Admin/">Referral System Anteh</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="https://amstronglandeza21.github.io/Admin/Pending">Pending</Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+  <Container>
+    <Navbar.Brand href={process.env.PUBLIC_URL + '/'}>Referral System Anteh</Navbar.Brand>
+    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+    <Navbar.Collapse id="basic-navbar-nav">
+      <Nav className="me-auto">
+        <Nav.Link href={process.env.PUBLIC_URL + '/'}>Home</Nav.Link>
+        <Nav.Link href={process.env.PUBLIC_URL + '/pending'}>Pending</Nav.Link>
+      </Nav>
+    </Navbar.Collapse>
+  </Container>
+</Navbar>
+
 
       <Container className="mt-5">
         <div className="row">
