@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
+import { LinkContainer } from 'react-router-bootstrap';
 
 const App = () => {
   const [referrerData, setReferrerData] = useState([]);
@@ -94,17 +95,18 @@ const App = () => {
   return (
     <div>
       <Navbar bg="dark" variant="dark">
-        <Container>
+      <Container>
         <Navbar.Brand href="/admin">Referral System Anteh</Navbar.Brand>
-<Navbar.Toggle aria-controls="basic-navbar-nav" />
-<Navbar.Collapse id="basic-navbar-nav">
-  <Nav className="me-auto">
-    <Nav.Link href="./pending">Pending</Nav.Link>
-  </Nav>
-</Navbar.Collapse>
-
-        </Container>
-      </Navbar>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <LinkContainer to="/pending">
+              <Nav.Link>Pending</Nav.Link>
+            </LinkContainer>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
 
       <Container className="mt-5">
         <div className="row">
