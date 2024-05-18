@@ -131,9 +131,12 @@ const Pending = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <LinkContainer to="/pending">
-              <Nav.Link>Pending</Nav.Link>
-            </LinkContainer>
+          <LinkContainer to="/pending">
+                <Nav.Link>Pending</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/status">
+                <Nav.Link>Status</Nav.Link>
+              </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Container>
