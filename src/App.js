@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
+import Modal from 'react-bootstrap/Modal';
 import { LinkContainer } from 'react-router-bootstrap';
 
 const App = () => {
@@ -13,6 +14,8 @@ const App = () => {
   const [statusMessage, setStatusMessage] = useState('');
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [deleteReferrerId, setDeleteReferrerId] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -37,12 +40,18 @@ const App = () => {
   };
 
   const deleteReferrerById = (referrerID) => {
+    setDeleteReferrerId(referrerID);
+    setShowConfirmationModal(true);
+  };
+
+  const handleDeleteConfirmed = () => {
+    setShowConfirmationModal(false);
     fetch('https://script.google.com/macros/s/AKfycby-wPsbelJ6wjm6mJwsjL7hltt6C_pCOPW5yobt02tEIE3ZdFPxNQcPsJKNrMZICeOF/exec', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: new URLSearchParams({ action: 'deleteReferrer', id: referrerID }),
+      body: new URLSearchParams({ action: 'deleteReferrer', id: deleteReferrerId }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -90,26 +99,25 @@ const App = () => {
         alert('Error adding referrer name. Please check the console for details.');
       });
   };
-  
 
   return (
     <div>
       <Navbar bg="dark" variant="dark">
-      <Container>
-        <Navbar.Brand href="/admin">Referral System Anteh</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-          <LinkContainer to="/pending">
+        <Container>
+          <Navbar.Brand href="/admin">Trimex Referral System </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <LinkContainer to="/pending">
                 <Nav.Link>Pending</Nav.Link>
               </LinkContainer>
               <LinkContainer to="/status">
                 <Nav.Link>Status</Nav.Link>
               </LinkContainer>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
 
       <Container className="mt-5">
         <div className="row">
@@ -133,7 +141,7 @@ const App = () => {
             <Table striped bordered hover>
               <thead>
                 <tr>
-                  <th>Referrer ID</th>
+                  <th>Referral Code</th>
                   <th>First Name</th>
                   <th>Last Name</th>
                   <th>Action</th>
@@ -155,6 +163,22 @@ const App = () => {
           </div>
         </div>
       </Container>
+
+
+      <Modal
+        show={showConfirmationModal}
+        onHide={() => setShowConfirmationModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this referrer?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirmationModal(false)}>Cancel</Button>
+          <Button variant="danger" onClick={handleDeleteConfirmed}>Delete</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

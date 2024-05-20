@@ -23,6 +23,13 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.button-spacing {
+  margin-right: 10px; /* Adjust as needed */
+}
+
+.button-spacing:last-child {
+  margin-right: 0;
+}
 
 .App-link {
   color: #61dafb;

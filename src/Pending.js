@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
-import  Modal  from 'react-bootstrap/Modal';
+import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
 import { LinkContainer } from 'react-router-bootstrap';
 
@@ -125,22 +126,22 @@ const Pending = () => {
 
   return (
     <div>
-       <Navbar bg="dark" variant="dark">
-      <Container>
-        <Navbar.Brand href="/admin">Referral System Anteh</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-          <LinkContainer to="/pending">
+      <Navbar bg="dark" variant="dark">
+        <Container>
+          <Navbar.Brand href="/admin">Referral System Anteh</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <LinkContainer to="/pending">
                 <Nav.Link>Pending</Nav.Link>
               </LinkContainer>
               <LinkContainer to="/status">
                 <Nav.Link>Status</Nav.Link>
               </LinkContainer>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
       <div className="container-fluid mt-4">
         <h2 className="mb-4">Pending Data</h2>
         {loading ? (
@@ -177,8 +178,13 @@ const Pending = () => {
                         <td>{row.course}</td>
                         <td>{row.status}</td>
                         <td>
-                          <button type="button" className="btn btn-danger mr-2" onClick={() => deleteReferredPerson(row.referredPersonID)}>Delete</button>
-                          <button type="button" className="btn btn-success" onClick={() => approveReferredPerson(row.referredPersonID)}>Approve</button>
+                          <div className="d-flex">
+                            <td>
+                            <button type="button" className="btn btn-danger button-spacing" onClick={() => deleteReferredPerson(row.referredPersonID)}>Delete</button>
+                            <button type="button" className="btn btn-success button-spacing" onClick={() => approveReferredPerson(row.referredPersonID)}>Approve</button>
+                          </td>
+
+                          </div>
                         </td>
                       </tr>
                     ))}
