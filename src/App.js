@@ -1,31 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
-import Table from 'react-bootstrap/Table';
-import Form from 'react-bootstrap/Form';
-import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
 import Modal from 'react-bootstrap/Modal';
-import { LinkContainer } from 'react-router-bootstrap';
+import Spinner from 'react-bootstrap/Spinner';
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+import Table from 'react-bootstrap/Table';
+
+import CustomNavbar from './CustomNavbar'; 
+
 
 const App = () => {
   const [referrerData, setReferrerData] = useState([]);
-  const [statusMessage, setStatusMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState('Loading...');
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [deleteReferrerId, setDeleteReferrerId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycby-wPsbelJ6wjm6mJwsjL7hltt6C_pCOPW5yobt02tEIE3ZdFPxNQcPsJKNrMZICeOF/exec?action=getAllReferrerNames');
+      setIsLoading(true);
+      const response = await fetch(`${BASE_URL}?action=getAllReferrerNames`);
       const data = await response.json();
-
       if (data.referrerNames) {
         setReferrerData(data.referrerNames);
         setStatusMessage('Records found.');
@@ -36,89 +37,83 @@ const App = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
       setStatusMessage('Error fetching data.');
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [BASE_URL]);
 
-  const deleteReferrerById = (referrerID) => {
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const deleteReferrerBy = (referrerID) => {
     setDeleteReferrerId(referrerID);
     setShowConfirmationModal(true);
   };
 
-  const handleDeleteConfirmed = () => {
-    setShowConfirmationModal(false);
-    fetch('https://script.google.com/macros/s/AKfycby-wPsbelJ6wjm6mJwsjL7hltt6C_pCOPW5yobt02tEIE3ZdFPxNQcPsJKNrMZICeOF/exec', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({ action: 'deleteReferrer', id: deleteReferrerId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message.includes('successfully')) {
-          fetchData();
-          alert('Referrer deleted successfully.'); // You can replace this with your modal
-        } else {
-          alert('Referrer not found.');
-        }
-      })
-      .catch((error) => {
-        console.error('Error deleting referrer:', error);
-        alert('Error deleting referrer. Please check the console for details.');
+  const handleDeleteConfirmed = async () => {
+    try {
+      setShowConfirmationModal(false);
+      setIsSubmitting(true);
+  
+      const response = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }, // Change content type to JSON
+        body: JSON.stringify({ action: 'deleteReferrerById', id: deleteReferrerId }), // Send action as 'deleteReferrerById'
       });
+  
+      const data = await response.json();
+  
+      if (data.message.includes('successfully')) {
+        fetchData();
+        alert('Referrer deleted successfully.');
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error('Error deleting referrer:', error);
+      alert('Error deleting referrer. Please check the console for details.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+  
 
-  const addReferrerName = () => {
+  const addReferrerName = async () => {
     if (!firstname || !lastname) {
       alert('Please enter both first name and last name.');
       return;
     }
-  
-    fetch('https://script.google.com/macros/s/AKfycby-wPsbelJ6wjm6mJwsjL7hltt6C_pCOPW5yobt02tEIE3ZdFPxNQcPsJKNrMZICeOF/exec', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({ action: 'addReferrerName', firstname, lastname }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message.includes('successfully')) {
-          fetchData();
-          setFirstname(''); // Clear the first name input field
-          setLastname('');
-          alert(`Referrer name added successfully. Referrer ID: ${data.referrerID}`);
-        } else if (data.message.toLowerCase().includes('exists')) {
-          alert('Referrer name already exists. Please choose a different name.');
-        } else {
-          alert(`An unknown error occurred. Details: ${JSON.stringify(data)}`);
-        }
-      })
-      .catch((error) => {
-        console.error('Error adding referrer name:', error);
-        alert('Error adding referrer name. Please check the console for details.');
+
+    try {
+      setIsSubmitting(true);
+      const response = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ action: 'addReferrerName', firstname, lastname }),
       });
+      const data = await response.json();
+      if (data.message.includes('successfully')) {
+        fetchData();
+        setFirstname('');
+        setLastname('');
+        alert(`Referrer name added successfully. Referrer ID: ${data.referrerID}`);
+      } else if (data.message.toLowerCase().includes('exists')) {
+        alert('Referrer name already exists. Please choose a different name.');
+      } else {
+        alert(`An unknown error occurred. Details: ${JSON.stringify(data)}`);
+      }
+    } catch (error) {
+      console.error('Error adding referrer name:', error);
+      alert('Error adding referrer name. Please check the console for details.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div>
-      <Navbar bg="dark" variant="dark">
-        <Container>
-          <Navbar.Brand href="/admin">Trimex Referral System </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <LinkContainer to="/pending">
-                <Nav.Link>Pending</Nav.Link>
-              </LinkContainer>
-              <LinkContainer to="/status">
-                <Nav.Link>Status</Nav.Link>
-              </LinkContainer>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
+      <CustomNavbar />
       <Container className="mt-5">
         <div className="row">
           <div className="col-md-4">
@@ -132,51 +127,60 @@ const App = () => {
                 <Form.Label>Last Name:</Form.Label>
                 <Form.Control type="text" value={lastname} onChange={(e) => setLastname(e.target.value)} required />
               </Form.Group>
-              <Button variant="primary" onClick={addReferrerName}>Add Referrer Name</Button>
+              <Button variant="danger" onClick={addReferrerName} disabled={isSubmitting}>
+                {isSubmitting ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Add'}
+              </Button>
             </Form>
           </div>
           <div className="col-md-8">
             <h2>Referrer Names</h2>
             <p>Status: {statusMessage}</p>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Referral Code</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {referrerData.map(({ referrerID, firstName, lastName }) => (
-                  <tr key={referrerID}>
-                    <td>{referrerID}</td>
-                    <td>{firstName}</td>
-                    <td>{lastName}</td>
-                    <td>
-                      <Button variant="danger" onClick={() => deleteReferrerById(referrerID)}>Delete</Button>
-                    </td>
+            {isLoading ? (
+              <Spinner animation="border" variant="danger" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+
+            ) : (
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Referrer ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {referrerData.map(({ referrerID, firstName, lastName }) => (
+                    <tr key={referrerID}>
+                      <td>{referrerID}</td>
+                      <td>{firstName}</td>
+                      <td>{lastName}</td>
+                      <td>
+                        <Button variant="danger" onClick={() => deleteReferrerBy(referrerID)} disabled={isSubmitting}>
+                          {isSubmitting ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Delete'}
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
           </div>
         </div>
       </Container>
-
-
-      <Modal
-        show={showConfirmationModal}
-        onHide={() => setShowConfirmationModal(false)}
-        centered
-      >
+      <Modal show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
         <Modal.Body>Are you sure you want to delete this referrer?</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowConfirmationModal(false)}>Cancel</Button>
-          <Button variant="danger" onClick={handleDeleteConfirmed}>Delete</Button>
+          <Button variant="secondary" onClick={() => setShowConfirmationModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteConfirmed} disabled={isSubmitting}>
+            {isSubmitting ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Delete'}
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
