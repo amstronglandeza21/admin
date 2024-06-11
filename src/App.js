@@ -9,12 +9,12 @@ import Table from 'react-bootstrap/Table';
 
 import CustomNavbar from './CustomNavbar'; 
 
-
 const App = () => {
   const [referrerData, setReferrerData] = useState([]);
   const [statusMessage, setStatusMessage] = useState('Loading...');
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
+  const [contact, setContact] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [deleteReferrerId, setDeleteReferrerId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -22,6 +22,7 @@ const App = () => {
 
   const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+  // Function to fetch referrer data from the backend
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -42,15 +43,18 @@ const App = () => {
     }
   }, [BASE_URL]);
 
+  // Fetch data on component mount
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
+  // Function to set the referrer ID for deletion and show the confirmation modal
   const deleteReferrerBy = (referrerID) => {
     setDeleteReferrerId(referrerID);
     setShowConfirmationModal(true);
   };
 
+  // Function to handle the deletion confirmation
   const handleDeleteConfirmed = async () => {
     try {
       setShowConfirmationModal(false);
@@ -58,8 +62,8 @@ const App = () => {
   
       const response = await fetch(BASE_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }, // Change content type to JSON
-        body: JSON.stringify({ action: 'deleteReferrerById', id: deleteReferrerId }), // Send action as 'deleteReferrerById'
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'deleteReferrerById', id: deleteReferrerId }),
       });
   
       const data = await response.json();
@@ -77,26 +81,26 @@ const App = () => {
       setIsSubmitting(false);
     }
   };
-  
 
   const addReferrerName = async () => {
-    if (!firstname || !lastname) {
-      alert('Please enter both first name and last name.');
+    if (!firstname || !lastname || !contact) {
+      alert('Please enter first name, last name, and contact number.');
       return;
     }
-
+  
     try {
       setIsSubmitting(true);
       const response = await fetch(BASE_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ action: 'addReferrerName', firstname, lastname }),
+        body: new URLSearchParams({ action: 'addReferrerName', firstname, lastname, contact }),
       });
       const data = await response.json();
       if (data.message.includes('successfully')) {
         fetchData();
         setFirstname('');
         setLastname('');
+        setContact('');
         alert(`Referrer name added successfully. Referrer ID: ${data.referrerID}`);
       } else if (data.message.toLowerCase().includes('exists')) {
         alert('Referrer name already exists. Please choose a different name.');
@@ -110,6 +114,7 @@ const App = () => {
       setIsSubmitting(false);
     }
   };
+  
 
   return (
     <div>
@@ -127,6 +132,10 @@ const App = () => {
                 <Form.Label>Last Name:</Form.Label>
                 <Form.Control type="text" value={lastname} onChange={(e) => setLastname(e.target.value)} required />
               </Form.Group>
+              <Form.Group className="mb-3" controlId="contact">
+                <Form.Label>Contact Number:</Form.Label>
+                <Form.Control type="text" value={contact} onChange={(e) => setContact(e.target.value)} required />
+              </Form.Group>
               <Button variant="danger" onClick={addReferrerName} disabled={isSubmitting}>
                 {isSubmitting ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Add'}
               </Button>
@@ -139,7 +148,6 @@ const App = () => {
               <Spinner animation="border" variant="danger" role="status">
                 <span className="visually-hidden">Loading...</span>
               </Spinner>
-
             ) : (
               <Table striped bordered hover>
                 <thead>
@@ -151,7 +159,7 @@ const App = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {referrerData.map(({ referrerID, firstName, lastName }) => (
+                  {referrerData.map(({ referrerID, firstName, lastName, contact }) => (
                     <tr key={referrerID}>
                       <td>{referrerID}</td>
                       <td>{firstName}</td>

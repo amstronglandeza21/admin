@@ -27,10 +27,10 @@ const CustomNavbar = () => {
           <LinkContainer to="/">
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/pending">
+            <LinkContainer to="/admin/pending">
               <Nav.Link>Pending</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/status">
+            <LinkContainer to="/admin/status">
               <Nav.Link>Status</Nav.Link>
             </LinkContainer>
           </Nav>

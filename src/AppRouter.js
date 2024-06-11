@@ -10,8 +10,8 @@ const AppRouter = () => {
     <Router basename="/admin">
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/pending" element={<Pending />} />
-        <Route path="/status" element={<Status />} />
+        <Route path="/admin/pending" element={<Pending />} />
+        <Route path="/admin/status" element={<Status />} />
         <Route path="*" element={<NotFound />} /> 
       </Routes>
     </Router>
