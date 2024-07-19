@@ -16,7 +16,7 @@ const App = () => {
   const [lastname, setLastname] = useState('');
   const [contact, setContact] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [deleteReferrerId, setDeleteReferrerId] = useState(null);
+  // const [deleteReferrerId, setDeleteReferrerId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -48,39 +48,39 @@ const App = () => {
     fetchData();
   }, [fetchData]);
 
-  // Function to set the referrer ID for deletion and show the confirmation modal
-  const deleteReferrerBy = (referrerID) => {
-    setDeleteReferrerId(referrerID);
-    setShowConfirmationModal(true);
-  };
+  // // Function to set the referrer ID for deletion and show the confirmation modal
+  // const deleteReferrerBy = (referrerID) => {
+  //   setDeleteReferrerId(referrerID);
+  //   setShowConfirmationModal(true);
+  // };
 
-  // Function to handle the deletion confirmation
-  const handleDeleteConfirmed = async () => {
-    try {
-      setShowConfirmationModal(false);
-      setIsSubmitting(true);
+  // // Function to handle the deletion confirmation
+  // const handleDeleteConfirmed = async () => {
+  //   try {
+  //     setShowConfirmationModal(false);
+  //     setIsSubmitting(true);
   
-      const response = await fetch(BASE_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'deleteReferrerById', id: deleteReferrerId }),
-      });
+  //     const response = await fetch(BASE_URL, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ action: 'deleteReferrerById', id: deleteReferrerId }),
+  //     });
   
-      const data = await response.json();
+  //     const data = await response.json();
   
-      if (data.message.includes('successfully')) {
-        fetchData();
-        alert('Referrer deleted successfully.');
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error('Error deleting referrer:', error);
-      alert('Error deleting referrer. Please check the console for details.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  //     if (data.message.includes('successfully')) {
+  //       fetchData();
+  //       alert('Referrer deleted successfully.');
+  //     } else {
+  //       alert(data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error deleting referrer:', error);
+  //     alert('Error deleting referrer. Please check the console for details.');
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
 
   const addReferrerName = async () => {
     if (!firstname || !lastname || !contact) {
@@ -152,10 +152,10 @@ const App = () => {
               <Table striped bordered hover>
                 <thead>
                   <tr>
-                    <th>Referrer ID</th>
+                    <th>Referrer Code</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Action</th>
+                 
                   </tr>
                 </thead>
                 <tbody>
@@ -164,11 +164,7 @@ const App = () => {
                       <td>{referrerID}</td>
                       <td>{firstName}</td>
                       <td>{lastName}</td>
-                      <td>
-                        <Button variant="danger" onClick={() => deleteReferrerBy(referrerID)} disabled={isSubmitting}>
-                          {isSubmitting ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Delete'}
-                        </Button>
-                      </td>
+                     
                     </tr>
                   ))}
                 </tbody>
@@ -186,9 +182,9 @@ const App = () => {
           <Button variant="secondary" onClick={() => setShowConfirmationModal(false)}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDeleteConfirmed} disabled={isSubmitting}>
+          {/* <Button variant="danger" onClick={handleDeleteConfirmed} disabled={isSubmitting}>
             {isSubmitting ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Delete'}
-          </Button>
+          </Button> */}
         </Modal.Footer>
       </Modal>
     </div>

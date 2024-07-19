@@ -46,7 +46,6 @@ const Status = () => {
                 <table className="table table-bordered table-hover">
                   <thead className="thead-light">
                     <tr>
-                      <th scope="col">Referred Person ID</th>
                       <th scope="col">Referral Code</th>
                       <th scope="col">First Name</th>
                       <th scope="col">Last Name</th>
@@ -56,7 +55,6 @@ const Status = () => {
                   <tbody>
                     {statusData.map((row, index) => (
                       <tr key={index}>
-                        <td>{row.referredPersonID}</td>
                         <td>{row.referrerID}</td>
                         <td>{row.referredFirstName}</td>
                         <td>{row.referredLastName}</td>
